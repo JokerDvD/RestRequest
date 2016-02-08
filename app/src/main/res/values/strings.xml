@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RestRequest</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="button_request_pd">Запрос Progres dialog</string>
+    <string name="button_request_d">Запрос Dialog</string>
+    <string name="button_request_fd">Запрос FragmentDialog</string>
+</resources>
