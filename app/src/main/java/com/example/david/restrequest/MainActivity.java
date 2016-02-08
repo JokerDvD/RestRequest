@@ -1,7 +1,6 @@
 package com.example.david.restrequest;
 
 import android.app.Dialog;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -38,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     DialogFragment dlg1;
     Dialog mDialog;
+    int dur =3;
+    String str;
+
     Button btRequest;
     TextView tvParser, tbOk;
     String url = "http://esapa.meta4.kz/rest/cim/KZ-430301-0000000000";
@@ -60,12 +62,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(final View view)
+            {
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, new Response.Listener<JSONObject>() {
+
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                try {
+
+                                    JSONObject GTIN = response.getJSONObject("gtin");
+                                   // tvParser.setText( "Response: = " + response.getString("owner") + " " + GTIN.getString("subbrand"));
+                                    str="Response: = " + response.getString("owner") + " " + GTIN.getString("subbrand");
+                                    Snackbar.make(view, str, Snackbar.LENGTH_LONG)
+
+                                            .setAction("Action",
+                                                    new View.OnClickListener()
+                                                    {
+
+                                                        @Override
+                                                        public void onClick(View v)
+                                                        {
+
+                                                        }
+                                                    })
+
+                                            //.setDuration(10000)
+                                            .show();
+
+                                } catch (Exception e) {
+                                    tvParser.setText("Error");
+                                }
+
+                                // tvParser.setText("Response: " + response.toString());
+                            }
+                        }, new Response.ErrorListener() {
+
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        });
+
+                RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+                requestQueue.add(jsObjRequest);
+                /*RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+                requestQueue.add(jsObjRequest);*/
+
+
+
             }
+
         });
 
         //  progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -140,11 +193,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                           TextView text = (TextView) mDialog.findViewById(R.id.tvTitle);
                           text.setText("Response:= " + response.getString("owner") + "\n" + GTIN.getString("subbrand"));
                           mDialog.show();*/
-                            Fragment fragment = new Fragment();
+
+                           // Fragment fragment = new Fragment();
                             Bundle bundle = new Bundle();
 
                             bundle.putString("key", "Response: = \n" + response.getString("owner") + "\n" + GTIN.getString("subbrand"));
-
+                           // str = "Response: = \n" + response.getString("owner") + "\n" + GTIN.getString("subbrand");
 
                             FragmentManager fm = getSupportFragmentManager();
                             Dialog1 editNameDialog = new Dialog1();
@@ -226,10 +280,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         client.disconnect();
     }
 
-    private void showEditDialog() {
+   /* private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
         Dialog1 editNameDialog = new Dialog1();
         editNameDialog.getView().findViewById(R.id.tvTitle);
         editNameDialog.show(fm, "fragment_edit_name");
-    }
+    }*/
 }
